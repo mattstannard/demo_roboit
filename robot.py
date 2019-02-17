@@ -6,6 +6,7 @@ MOTOR_VOLTS = 6
 
 rr = RRB3(BATTERY_VOLTS, MOTOR_VOLTS)
 
+running = False
 
 def turn_randomly():
     turn_time = random.randint(1, 3)
@@ -19,13 +20,21 @@ try:
     while True:
         distance = rr.get_distance()
 
-        if distance < 50 :
-        	turn_randomly
+        if distance < 50 and running :
+        	print "Turning"
+        	
+        	turn_randomly()
+        elif rr.sw1_closed():
+        	print "Enabling Robot"
+
+            running = not running
+
         else :
+        	print "Going forward"
         	rr.forward(2)
 
     time.sleep(1)
-    
+
 finally:
 	print "bye bye"
 	rr.cleanup()
